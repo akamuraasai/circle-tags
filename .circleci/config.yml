@@ -39,8 +39,6 @@ workflows:
             branches:
               only: master
       - deploy_prod:
-          requires:
-            - build
           filters:
             branches:
               ignore: /.*/
