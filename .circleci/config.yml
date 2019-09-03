@@ -1,0 +1,48 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run: echo "normal build"
+
+  deploy_stag:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run: echo "deploy stag"
+
+  deploy_prod:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - run: echo "deploy prod"
+
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build
+      - deploy_stag:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+      - deploy_prod:
+          requires:
+            - build
+          filters:
+            tags:
+              only: /^v/
+            branches:
+              only: master
